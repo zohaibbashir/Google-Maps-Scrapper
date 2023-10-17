@@ -31,7 +31,7 @@ This Python script utilizes the Playwright library to perform web scraping and d
 1. Clone this repository:
 
    ```bash
-   git clone https://github.com/yourusername/google-maps-scraping.git
+   git clone https://github.com/zohaibbashir/google-maps-scraping.git
 2. Navigate to the project directory:
    ```bash
    cd google-maps-scraping
