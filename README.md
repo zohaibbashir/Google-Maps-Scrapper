@@ -3,9 +3,9 @@ This Python script utilizes the Playwright library to perform web scraping and d
 ## Table of Contents
 
 - [Prerequisite](#prerequisite)
-- [Key Features](#key_features)
+- [Key Features](#key-features)
 - [Installation](#installation)
-- [How to Use](#how_to_use)
+- [How to Use](#how-to-use)
 
 ## Prerequisite
 - This code requires a python version below 3.10
