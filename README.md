@@ -47,6 +47,6 @@ To use this script, follow these steps:
     ```bash
      python main.py -s "search term" -t total
     ```
-    Write the name of the place/business in <search term> and a number in place of <total> to get the number of listings. If listings are less than the number provided it is because there are fewer listings than the number provided
+    Write the name of the place/business in "search term" and a number in place of "total" to get the number of listings. If listings are less than the number provided it is because there are fewer listings than the number provided
 
 2. The script will launch a browser, perform the search, and start scraping information. It will display the progress and save the results to a CSV file called result.csv.
