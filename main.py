@@ -6,18 +6,18 @@ import argparse
 l1=[]
 l2=[]
 
-Name: str = None
-Address: str = None
-Website: str = None
-Phone_Number: str = None
-Reviews_Count: int = None
-Reviews_Average: float = None
-Store_Shopping: str = None
-In_Store_Pickup: str = None
-Store_Delivery: str = None
-Place_Type: str = None
-Opens_At: str = None
-Introduction: str = None
+Name = ""
+Address = ""
+Website = ""
+Phone_Number = ""
+Reviews_Count = 0
+Reviews_Average = 0
+Store_Shopping = ""
+In_Store_Pickup = ""
+Store_Delivery = ""
+Place_Type = ""
+Opens_At = ""
+Introduction = ""
 
 names_list=[]
 address_list=[]
