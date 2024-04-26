@@ -32,6 +32,12 @@ place_t_list=[]
 open_list=[]
 intro_list=[]
 
+def extract_data(xpath, data_list, page):
+    if page.locator(xpath).count() > 0:
+        data = page.locator(xpath).inner_text()
+    else:
+        data = ""
+    data_list.append(data)
 
 def main():
     with sync_playwright() as p:
@@ -207,44 +213,12 @@ def main():
                 Opens_At=opens
                 open_list.append(Opens_At)
 
-
-            if page.locator(name_xpath).count() > 0:
-                Name = page.locator(name_xpath).inner_text()
-                names_list.append(Name)
-                #l1.append(page.locator(name_xpath).inner_text())
-            else:
-                Name = ""
-                names_list.append(Name)
-            if page.locator(address_xpath).count() > 0:
-                Address = page.locator(address_xpath).inner_text()
-                address_list.append(Address)
-            else:
-                Address = ""
-                address_list.append(Address)
-            if page.locator(website_xpath).count() > 0:
-                Website = page.locator(website_xpath).inner_text()
-                website_list.append(Website)
-            else:
-                Website = ""
-                website_list.append(Website)
-            if page.locator(phone_number_xpath).count() > 0:
-                Phone_Number = page.locator(phone_number_xpath).inner_text()
-                phones_list.append(Phone_Number)
-            else:
-                Phone_Number = ""
-                phones_list.append(Phone_Number)
-            if page.locator(place_type_xpath).count() > 0:
-                Place_Type = page.locator(place_type_xpath).inner_text()
-                place_t_list.append(Place_Type)
-            else:
-                Place_Type = ""
-                place_t_list.append(Place_Type)
+            extract_data(name_xpath, names_list, page)
+            extract_data(address_xpath, address_list, page)
+            extract_data(website_xpath, website_list, page)
+            extract_data(phone_number_xpath, phones_list, page)
+            extract_data(place_type_xpath, place_t_list, page)
   
-   
-            
-            
-        
-        
         df = pd.DataFrame(list(zip(names_list, website_list,intro_list,phones_list,address_list,reviews_c_list,reviews_a_list,store_s_list,in_store_list,store_del_list,place_t_list,open_list)), columns =['Names','Website','Introduction','Phone Number','Address','Review Count','Average Review Count','Store Shopping','In Store Pickup','Delivery','Type','Opens At'])
         for column in df.columns:
             if df[column].nunique() == 1:
