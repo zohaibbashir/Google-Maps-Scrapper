@@ -35,17 +35,17 @@ intro_list=[]
 
 def main():
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)
+        # browser = p.chromium.launch(headless=False)
+        browser = p.chromium.launch(executable_path='C:\Program Files\Google\Chrome\Application\chrome.exe', headless=False)
         page = browser.new_page()
 
         page.goto("https://www.google.com/maps/@32.9817464,70.1930781,3.67z?", timeout=60000)
         page.wait_for_timeout(1000)
 
         page.locator('//input[@id="searchboxinput"]').fill(search_for)
-        page.wait_for_timeout(1000)
-
         page.keyboard.press("Enter")
-        page.wait_for_timeout(1000)
+        page.wait_for_selector('//a[contains(@href, "https://www.google.com/maps/place")]')
+
 
        
         page.hover('//a[contains(@href, "https://www.google.com/maps/place")]')
@@ -54,7 +54,9 @@ def main():
         previously_counted = 0
         while True:
             page.mouse.wheel(0, 10000)
-            page.wait_for_timeout(3000)
+            # page.wait_for_timeout(3000)
+            page.wait_for_selector('//a[contains(@href, "https://www.google.com/maps/place")]')
+
 
             if (page.locator( '//a[contains(@href, "https://www.google.com/maps/place")]').count() >= total):
                 listings = page.locator( '//a[contains(@href, "https://www.google.com/maps/place")]').all()[:total]
@@ -74,8 +76,9 @@ def main():
         # scraping
         for listing in listings:
             listing.click()
-            page.wait_for_timeout(5000)
-
+            # page.wait_for_timeout(5000)
+            page.wait_for_selector('//div[@class="TIHn2 "]//h1[@class="DUwDvf lfPIob"]')
+            # page.wait_for_timeout(5000)
            
             name_xpath = '//div[@class="TIHn2 "]//h1[@class="DUwDvf lfPIob"]'
             address_xpath = '//button[@data-item-id="address"]//div[contains(@class, "fontBodyMedium")]'
@@ -111,7 +114,7 @@ def main():
 
             if page.locator(reviews_average_xpath).count() > 0:
                 temp = page.locator(reviews_average_xpath).inner_text()
-                temp=temp.replace(' ','')
+                temp=temp.replace(' ','').replace(',','.')
                 Reviews_Average=float(temp)
                 reviews_a_list.append(Reviews_Average)
             else:
