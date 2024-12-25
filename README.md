@@ -6,6 +6,7 @@ This Python script utilizes the Playwright library to perform web scraping and d
 - [Key Features](#key-features)
 - [Installation](#installation)
 - [How to Use](#how-to-use)
+- [Video Example](#video-example)
 
 ## Prerequisite
 - This code requires a python version below 3.10
@@ -53,3 +54,9 @@ To use this script, follow these steps:
     ```
 
 3. The script will launch a browser, perform the search, and start scraping information. It will display the progress and save the results to a CSV file called result.csv.
+## Video Example:
+I've included an example of running the code below.
+
+https://www.linkedin.com/posts/zohaibbashir_python-data-webscraping-activity-7093920891411062784-flEQ
+
+
