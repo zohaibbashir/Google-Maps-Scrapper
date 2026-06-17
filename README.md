@@ -8,13 +8,16 @@ To do a custom web scraping project you can find me on Upwork
 </a>
 
 ## Table of Contents
-- [Prerequisites](#prerequisites)
-- [Key Features](#key-features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Example](#example)
-- [Notes](#notes)
-- [Video Example](#video-example)
+- [Google-Maps-Scrapper](#google-maps-scrapper)
+  - [Table of Contents](#table-of-contents)
+  - [Prerequisites](#prerequisites)
+  - [Key Features](#key-features)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [Example](#example)
+  - [Notes](#notes)
+  - [Video Example](#video-example)
+  - [License](#license)
 
 ## Prerequisites
 - Python 3.8 or 3.9 (Python 3.10+ may not be compatible with some dependencies)
@@ -57,6 +60,7 @@ Run the script with your desired search term and number of results:
 
 ```bash
 python main.py -s "Turkish Restaurants in Toronto Canada" -t 20
+python main.py -s "Vitamin in Tehran Iran" -t 20
 ```
 
 - `-s` or `--search`: Search query for Google Maps (default: "turkish stores in toronto Canada")
