@@ -1,103 +1,118 @@
-# Google-Maps-Scrapper
-This Python script utilizes the Playwright library to perform web scraping and data extraction from Google Maps. It is particularly designed for obtaining information about businesses, including their name, address, website, phone number, reviews, and more.
+# Google Maps Scraper (Versao Aprimorada / Enhanced Version)
 
-## Read Prerequistes
-Latest python was not used and is not suggested
+> [!NOTE]
+> **Creditos / Credits:** Este projeto e uma versao aprimorada do projeto original criado por [zohaibbashir/Google-Maps-Scrapper](https://github.com/zohaibbashir/Google-Maps-Scrapper). Mantemos o script original com melhorias de robustez e adicionamos uma nova camada de API local integrada ao Ngrok.
 
-<br>
-To do a custom web scraping project you can find me on Upwork or on Linkedin<br><br>
+This Python script utilizes the Playwright library to perform web scraping and data extraction from Google Maps. It is designed for obtaining information about businesses, including their name, address, website, phone number, reviews, and more.
 
-<a href="https://www.upwork.com/freelancers/~01dbb4d47d167c2d43" target="_blank">
-<img src=https://img.shields.io/badge/Upwork-6FDA44?&style=for-the-badge&logo=medium&logoColor=white alt=medium style="margin-bottom: 5px;" />
-</a>
+---
 
-<a href="https://www.linkedin.com/in/zohaibbashir" target="_blank">
-<img src="https://img.shields.io/badge/LinkedIn-0077B5?&style=for-the-badge&logo=linkedin&logoColor=white" alt="linkedin" style="margin-bottom: 5px;" />
-</a>
+## 🚀 Novas Funcionalidades (Versao Aprimorada)
 
+Além do script original em linha de comando, esta versão traz as seguintes melhorias:
+1. **API Local (FastAPI)**: Servidor local pronto para receber requisições de outros sistemas externos.
+2. **Integração com Ngrok**: Exposição automática da API local na internet pública de forma segura, contornando limitações de pastas temporárias do Windows.
+3. **Divisão de Horários**: Extração independente dos horários de **abertura** (`opens_at`) e **fechamento** (`closes_at`).
+4. **Resoluções de Bugs**:
+   - Correção na paginação de contagem de avaliações (suporte ao formato brasileiro, ex: `4.704` avaliações).
+   - Prevenção de perda de colunas ao gerar arquivos CSV com um único resultado.
 
-## Table of Contents
-- [Prerequisites](#prerequisites)
-- [Multiple Branches](#multiple-branches)
-- [Key Features](#key-features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Example](#example)
-- [Notes](#notes)
-- [Video Example](#video-example)
+---
 
-## Prerequisites
-- Python 3.8 or 3.9 (Python 3.10+ may not be compatible with some dependencies)
-- Google Chrome or Chromium browser installed (for Playwright)
+## 🛠️ Requisitos / Prerequisites
+- **Python 3.13+** (ou versões estáveis compatíveis).
+- **Google Chrome** ou **Chromium** instalado.
 
-## Multiple Branches
-The repo currently has 3 branches
-- Main
-- Latest Libraries (The one that works with latest libraries, can cause issues. Prefer Main)
-- Linux ( Linux Support if main branch does not work correctly)
+---
 
+## 📦 Como Instalar
 
-## Key Features
-- Data Scraping: The script scrapes data from Google Maps listings, extracting valuable information about businesses, such as their name, address, website, and contact details.
-
-- Review Analysis: It extracts review counts and average ratings, providing insights into businesses' online reputation.
-
-- Business Type Detection: The script identifies whether a business offers in-store shopping, in-store pickup, or delivery services.
-
-- Operating Hours: It extracts information about the business's operating hours.
-
-- Introduction Extraction: The script also scrapes introductory information about the businesses when available.
-
-- Data Cleansing: It cleanses and organizes the scraped data, removing redundant or unnecessary columns.
-
-- CSV Export: The cleaned data is exported to a CSV file for further analysis or integration with other tools.
-
-## Installation
-
-1. Clone this repository:
+1. Clone o repositório:
    ```bash
-   git clone https://github.com/zohaibbashir/Google-Maps-Scrapper.git
-   cd google-maps-scraper
+   git clone <url-do-seu-repositorio>
+   cd zohaibbashir-scraper
    ```
-2. Install Python dependencies:
+2. Crie e ative seu ambiente virtual:
+   ```bash
+   python -m venv venv
+   .\venv\Scripts\activate
+   ```
+3. Instale as dependências:
    ```bash
    pip install -r requirements.txt
-   ```
-3. Install Playwright browsers:
-   ```bash
    playwright install
    ```
 
-## Usage
+---
 
-Run the script with your desired search term and number of results:
+## 📡 Como Usar a API (Modo Servidor com Ngrok)
+
+Para expor o servidor local na internet pública de forma segura:
+
+### Passo 1: Configurar seu Token do Ngrok
+1. Obtenha seu Authtoken gratuito criando uma conta em [ngrok.com](https://ngrok.com).
+2. Dê dois cliques no arquivo **`configurar_token.bat`** na pasta do projeto.
+3. Cole o seu token no terminal e pressione **Enter**.
+
+### Passo 2: Ligar a API
+1. Dê dois cliques no arquivo **`iniciar_api.bat`**.
+2. O servidor iniciará e gerará automaticamente uma URL pública do Ngrok, por exemplo:
+   ```text
+   ========================================================
+             NGROK TÚNEL ATIVADO COM SUCESSO!
+     API Pública no endereço: https://xxxx-xxxx.ngrok-free.app
+     Exemplo de requisição: POST https://xxxx-xxxx.ngrok-free.app/scrape
+   ========================================================
+   ```
+
+### Passo 3: Enviar Requisição POST
+Envie uma chamada **POST** em formato JSON para a URL pública gerada ou para a local (`http://127.0.0.1:8000/scrape`):
+
+**Corpo (JSON):**
+```json
+{
+  "search": "cafeteria abreu e lima",
+  "total": 1
+}
+```
+
+**Exemplo de Resposta (JSON):**
+```json
+[
+  {
+    "name": "Arte Café 81",
+    "address": "R. Cento e Quarenta e Oito, 436 - Caetés I, Abreu e Lima - PE, 53530-380",
+    "website": "",
+    "phone_number": "(81) 98793-6047",
+    "reviews_count": 12,
+    "reviews_average": 5.0,
+    "store_shopping": "No",
+    "in_store_pickup": "No",
+    "store_delivery": "No",
+    "place_type": "Cafeteria",
+    "opens_at": "09:00",
+    "closes_at": "17:00",
+    "introduction": "None Found"
+  }
+]
+```
+
+---
+
+## 💻 Como Usar via Linha de Comando (CLI)
+
+Você também pode executar diretamente pelo terminal ou usando o script interativo **`iniciar.bat`**:
 
 ```bash
 python main.py -s "Turkish Restaurants in Toronto Canada" -t 20
 ```
 
-- `-s` or `--search`: Search query for Google Maps (default: "turkish stores in toronto Canada")
-- `-t` or `--total`: Number of results to scrape (default: 1)
-- `-o` or `--output`: Output CSV file path (default: result.csv)
-- `--append`: Append results to the output file instead of overwriting (default: off)
+- `-s` ou `--search`: Termo de busca (ex: "restaurantes recife").
+- `-t` or `--total`: Quantidade máxima de resultados (padrão: 1).
+- `-o` or `--output`: Caminho do arquivo CSV de saída (padrão: `result.csv`).
+- `--append`: Adiciona os resultados ao fim do arquivo CSV em vez de sobrescrevê-lo.
 
-## Example
+---
 
-Append new results to an existing CSV file:
-```bash
-python main.py -s "Turkish Restaurants in Toronto Canada" -t 20 -o toronto_turkish_restaurants.csv --append
-```
-
-The script will launch a browser, perform the search, and start scraping information. Progress will be displayed in the terminal, and results will be saved to the specified CSV file. If `--append` is used, new results will be added to the end of the file without removing previous data.
-
-## Notes
-- The script opens a visible browser window (not headless) for scraping.
-- Google Maps DOM may change, which can break the script. If you encounter issues, update the XPaths in `main.py`.
-- Avoid running too many scrapes in a short period to prevent being blocked by Google.
-
-## Video Example
-
-https://www.linkedin.com/posts/zohaibbashir_python-data-webscraping-activity-7093920891411062784-flEQ
-
-## License
-MIT
+## 📄 License
+MIT License.
