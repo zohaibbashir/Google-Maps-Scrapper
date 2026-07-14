@@ -23,6 +23,12 @@ class Place:
     opens_at: str = ""
     introduction: str = ""
 
+# Google lazy-loads the results panel, so a scroll that adds nothing is not
+# proof the list ended — it usually means the next batch is still in flight.
+# Only give up after this many flat rounds, waiting between each.
+MAX_STAGNANT_SCROLLS = 3
+SCROLL_SETTLE_MS = 1000
+
 def setup_logging():
     logging.basicConfig(
         level=logging.INFO,
@@ -126,16 +132,25 @@ def scrape_places(search_for: str, total: int) -> List[Place]:
             page.wait_for_selector('//a[contains(@href, "https://www.google.com/maps/place")]')
             page.hover('//a[contains(@href, "https://www.google.com/maps/place")]')
             previously_counted = 0
+            stagnant_rounds = 0
             while True:
                 page.mouse.wheel(0, 10000)
                 page.wait_for_selector('//a[contains(@href, "https://www.google.com/maps/place")]')
                 found = page.locator('//a[contains(@href, "https://www.google.com/maps/place")]').count()
-                logging.info(f"Currently Found: {found}")
                 if found >= total:
+                    logging.info(f"Currently Found: {found}")
                     break
                 if found == previously_counted:
-                    logging.info("Arrived at all available")
-                    break
+                    stagnant_rounds += 1
+                    if stagnant_rounds >= MAX_STAGNANT_SCROLLS:
+                        logging.info(f"Arrived at all available: {found}")
+                        break
+                    # The count only settles once the lazy-loaded batch lands, so
+                    # wait before treating a flat round as the end of the list.
+                    page.wait_for_timeout(SCROLL_SETTLE_MS)
+                else:
+                    stagnant_rounds = 0
+                    logging.info(f"Currently Found: {found}")
                 previously_counted = found
             listings = page.locator('//a[contains(@href, "https://www.google.com/maps/place")]').all()[:total]
             listings = [listing.locator("xpath=..") for listing in listings]
