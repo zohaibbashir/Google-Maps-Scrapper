@@ -29,6 +29,18 @@ def setup_logging():
         format='%(asctime)s - %(levelname)s - %(message)s',
     )
 
+# Google separates the open/closed status from the hours with U+22C5 DOT
+# OPERATOR in some locales and U+00B7 MIDDLE DOT in others. The two are
+# visually identical, so they are spelled as escapes to keep them apart.
+OPENS_AT_SEPARATORS = ("\u22c5", "\u00b7")
+
+def parse_opens_at(raw: str) -> str:
+    for separator in OPENS_AT_SEPARATORS:
+        if separator in raw:
+            raw = raw.split(separator, 1)[1]
+            break
+    return raw.replace("\u202f", "").strip()
+
 def extract_text(page: Page, xpath: str) -> str:
     try:
         if page.locator(xpath).count() > 0:
@@ -91,21 +103,9 @@ def extract_place(page: Page) -> Place:
                 if 'delivery' in check:
                     place.store_delivery = "Yes"
     # Opens At
-    opens_at_raw = extract_text(page, opens_at_xpath)
+    opens_at_raw = extract_text(page, opens_at_xpath) or extract_text(page, opens_at_xpath2)
     if opens_at_raw:
-        opens = opens_at_raw.split('⋅')
-        if len(opens) > 1:
-            place.opens_at = opens[1].replace("\u202f","")
-        else:
-            place.opens_at = opens_at_raw.replace("\u202f","")
-    else:
-        opens_at2_raw = extract_text(page, opens_at_xpath2)
-        if opens_at2_raw:
-            opens = opens_at2_raw.split('⋅')
-            if len(opens) > 1:
-                place.opens_at = opens[1].replace("\u202f","")
-            else:
-                place.opens_at = opens_at2_raw.replace("\u202f","")
+        place.opens_at = parse_opens_at(opens_at_raw)
     return place
 
 def scrape_places(search_for: str, total: int) -> List[Place]:
