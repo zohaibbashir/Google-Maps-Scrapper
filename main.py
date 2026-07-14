@@ -156,19 +156,32 @@ def scrape_places(search_for: str, total: int) -> List[Place]:
             browser.close()
     return places
 
+def drop_uninformative_columns(df: pd.DataFrame) -> pd.DataFrame:
+    # A single row makes every column look constant, so there is nothing to learn from it.
+    if len(df) < 2:
+        return df
+    keep = [column for column in df.columns if df[column].nunique(dropna=False) > 1]
+    return df[keep] if keep else df
+
 def save_places_to_csv(places: List[Place], output_path: str = "result.csv", append: bool = False):
     df = pd.DataFrame([asdict(place) for place in places])
-    if not df.empty:
-        for column in df.columns:
-            if df[column].nunique() == 1:
-                df.drop(column, axis=1, inplace=True)
-        file_exists = os.path.isfile(output_path)
-        mode = "a" if append else "w"
-        header = not (append and file_exists)
-        df.to_csv(output_path, index=False, mode=mode, header=header)
-        logging.info(f"Saved {len(df)} places to {output_path} (append={append})")
-    else:
+    if df.empty:
         logging.warning("No data to save. DataFrame is empty.")
+        return
+
+    if append and os.path.isfile(output_path):
+        # Conform to the header already on disk; dropping columns here would
+        # shift values into the wrong columns of the existing file.
+        existing_columns = pd.read_csv(output_path, nrows=0).columns.tolist()
+        dropped = [column for column in df.columns if column not in existing_columns]
+        if dropped:
+            logging.warning(f"Columns not in {output_path}, not appended: {', '.join(dropped)}")
+        df = df.reindex(columns=existing_columns)
+        df.to_csv(output_path, index=False, mode="a", header=False)
+    else:
+        df = drop_uninformative_columns(df)
+        df.to_csv(output_path, index=False, mode="w", header=True)
+    logging.info(f"Saved {len(df)} places to {output_path} (append={append})")
 
 def main():
     parser = argparse.ArgumentParser()
