@@ -15,16 +15,16 @@ Web scraper para extracao de dados do Google Maps. Ideal para coleta de informac
 - Pandas
 
 ## Instalacao
-`ash
+```bash
 git clone https://github.com/Wsanbey/Google-Maps-Scrapper.git
 cd Google-Maps-Scrapper
 pip install -r requirements.txt
-`
+```
 
 ## Uso
-`python
+```python
 python scraper.py --location "Recife, PE" --query "restaurantes"
-`
+```
 
 ## Licenca
 MIT
