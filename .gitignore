@@ -2,4 +2,9 @@ __pycache__/
 *.pyc
 result.csv
 output.csv
-playwright/.cache/ 
+playwright/.cache/
+venv/
+ngrok.exe
+*.log
+page_html.txt
+panel_html.txt
